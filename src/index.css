@@ -1,0 +1,468 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Default: Cyber-Agri Dark (Futuristic Smart Agritech) */
+  :root, [data-theme="cyber-dark"] {
+    --bg-page: #080c14;
+    --bg-page-mesh: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.15) 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, rgba(6, 182, 212, 0.12) 0px, transparent 50%),
+                    radial-gradient(at 50% 100%, rgba(15, 23, 42, 0.9) 0px, transparent 60%);
+    --bg-card: #0f172a;
+    --bg-card-subtle: #19243a;
+    --bg-card-hover: #1e293b;
+    --bg-card-glass: rgba(15, 23, 42, 0.8);
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    --text-heading: #f1f5f9;
+    
+    --border-color: #1e293b;
+    --border-accent: rgba(16, 185, 129, 0.45);
+    
+    --accent-primary: #10b981;
+    --accent-primary-hover: #059669;
+    --accent-contrast: #022c22;
+    --accent-glow: 0 0 25px rgba(16, 185, 129, 0.35);
+    
+    --hero-bg: linear-gradient(135deg, #091e17 0%, #0d281f 40%, #083344 100%);
+    --hero-border: rgba(16, 185, 129, 0.35);
+    --navbar-bg: rgba(8, 12, 20, 0.88);
+    --navbar-border: rgba(30, 41, 59, 0.85);
+    
+    --badge-bg: rgba(16, 185, 129, 0.15);
+    --badge-text: #34d399;
+    --badge-border: rgba(16, 185, 129, 0.35);
+
+    --color-scheme: dark;
+  }
+
+  /* Theme 2: Neo-Botanical Light (Crisp Clean High-Tech) */
+  [data-theme="emerald-light"] {
+    --bg-page: #f8fafc;
+    --bg-page-mesh: radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.06) 0px, transparent 50%);
+    --bg-card: #ffffff;
+    --bg-card-subtle: #f1f5f9;
+    --bg-card-hover: #f8fafc;
+    --bg-card-glass: rgba(255, 255, 255, 0.9);
+    
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --text-heading: #0f172a;
+    
+    --border-color: #e2e8f0;
+    --border-accent: rgba(16, 185, 129, 0.4);
+    
+    --accent-primary: #059669;
+    --accent-primary-hover: #047857;
+    --accent-contrast: #ffffff;
+    --accent-glow: 0 4px 15px rgba(5, 150, 105, 0.2);
+    
+    --hero-bg: linear-gradient(135deg, #064e3b 0%, #047857 50%, #0284c7 100%);
+    --hero-border: #047857;
+    --navbar-bg: rgba(255, 255, 255, 0.9);
+    --navbar-border: rgba(226, 232, 240, 0.9);
+    
+    --badge-bg: #d1fae5;
+    --badge-text: #065f46;
+    --badge-border: #a7f3d0;
+
+    --color-scheme: light;
+  }
+
+  /* Theme 3: Golden Solar Harvest (Warm Amber, Toasted Wheat & Sunburst) */
+  [data-theme="golden-harvest"] {
+    --bg-page: #0d0a07;
+    --bg-page-mesh: radial-gradient(at 0% 0%, rgba(245, 158, 11, 0.16) 0px, transparent 50%),
+                    radial-gradient(at 100% 50%, rgba(217, 119, 6, 0.14) 0px, transparent 50%);
+    --bg-card: #18130c;
+    --bg-card-subtle: #241c13;
+    --bg-card-hover: #291e12;
+    --bg-card-glass: rgba(24, 19, 12, 0.85);
+    
+    --text-primary: #fef3c7;
+    --text-secondary: #e2b17b;
+    --text-muted: #8c7258;
+    --text-heading: #fffbeb;
+    
+    --border-color: #2e2114;
+    --border-accent: rgba(245, 158, 11, 0.45);
+    
+    --accent-primary: #f59e0b;
+    --accent-primary-hover: #d97706;
+    --accent-contrast: #451a03;
+    --accent-glow: 0 0 25px rgba(245, 158, 11, 0.4);
+    
+    --hero-bg: linear-gradient(135deg, #2b1803 0%, #451a03 50%, #78350f 100%);
+    --hero-border: rgba(245, 158, 11, 0.35);
+    --navbar-bg: rgba(13, 10, 7, 0.92);
+    --navbar-border: rgba(46, 33, 20, 0.9);
+    
+    --badge-bg: rgba(245, 158, 11, 0.15);
+    --badge-text: #fbbf24;
+    --badge-border: rgba(245, 158, 11, 0.35);
+
+    --color-scheme: dark;
+  }
+
+  /* Theme 4: Oceanic Precision (Deep Azure & Cyan Agromet Weather) */
+  [data-theme="oceanic-precision"] {
+    --bg-page: #060e1e;
+    --bg-page-mesh: radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.16) 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, rgba(20, 184, 166, 0.14) 0px, transparent 50%);
+    --bg-card: #0b1933;
+    --bg-card-subtle: #122447;
+    --bg-card-hover: #162b54;
+    --bg-card-glass: rgba(11, 25, 51, 0.82);
+    
+    --text-primary: #f0f9ff;
+    --text-secondary: #93c5fd;
+    --text-muted: #60a5fa;
+    --text-heading: #f8fafc;
+    
+    --border-color: #173059;
+    --border-accent: rgba(14, 165, 233, 0.45);
+    
+    --accent-primary: #0284c7;
+    --accent-primary-hover: #0369a1;
+    --accent-contrast: #ffffff;
+    --accent-glow: 0 0 25px rgba(14, 165, 233, 0.4);
+    
+    --hero-bg: linear-gradient(135deg, #071936 0%, #03396c 50%, #005b96 100%);
+    --hero-border: rgba(14, 165, 233, 0.35);
+    --navbar-bg: rgba(6, 14, 30, 0.9);
+    --navbar-border: rgba(23, 48, 89, 0.85);
+    
+    --badge-bg: rgba(14, 165, 233, 0.15);
+    --badge-text: #38bdf8;
+    --badge-border: rgba(14, 165, 233, 0.35);
+
+    --color-scheme: dark;
+  }
+
+  /* Theme 5: Heritage Earth (Traditional Indian Agriculture) */
+  [data-theme="heritage"] {
+    --bg-page: #fcfbf7;
+    --bg-page-mesh: none;
+    --bg-card: #ffffff;
+    --bg-card-subtle: #f6f4ea;
+    --bg-card-hover: #f1eee0;
+    --bg-card-glass: rgba(255, 255, 255, 0.95);
+    
+    --text-primary: #1b251b;
+    --text-secondary: #44563e;
+    --text-muted: #738a6e;
+    --text-heading: #1b4332;
+    
+    --border-color: #e5dec9;
+    --border-accent: rgba(45, 106, 79, 0.3);
+    
+    --accent-primary: #2d6a4f;
+    --accent-primary-hover: #1b4332;
+    --accent-contrast: #ffffff;
+    --accent-glow: 0 4px 15px rgba(45, 106, 79, 0.2);
+    
+    --hero-bg: linear-gradient(135deg, #1b4332 0%, #2d6a4f 50%, #40916c 100%);
+    --hero-border: #1b4332;
+    --navbar-bg: linear-gradient(to right, #173e32, #215745, #2d6a4f);
+    --navbar-border: #143e31;
+    
+    --badge-bg: rgba(232, 163, 61, 0.2);
+    --badge-text: #b45309;
+    --badge-border: rgba(232, 163, 61, 0.4);
+
+    --color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', system-ui, sans-serif;
+    color-scheme: var(--color-scheme);
+  }
+  
+  body {
+    background-color: var(--bg-page);
+    background-image: var(--bg-page-mesh);
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: var(--text-primary);
+    min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  h1, h2, h3, .font-heading {
+    font-family: 'Baloo 2', 'Noto Sans Devanagari', sans-serif;
+    color: var(--text-heading);
+  }
+}
+
+/* Custom Semantic Theme Helper Classes */
+.bg-theme-page {
+  background-color: var(--bg-page);
+}
+
+.bg-theme-card {
+  background-color: var(--bg-card);
+  border-color: var(--border-color);
+}
+
+.bg-theme-card-subtle {
+  background-color: var(--bg-card-subtle);
+}
+
+.bg-theme-card-hover:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.text-theme-primary {
+  color: var(--text-primary);
+}
+
+.text-theme-secondary {
+  color: var(--text-secondary);
+}
+
+.text-theme-muted {
+  color: var(--text-muted);
+}
+
+.text-theme-heading {
+  color: var(--text-heading);
+}
+
+.border-theme {
+  border-color: var(--border-color);
+}
+
+.border-theme-accent {
+  border-color: var(--border-accent);
+}
+
+.bg-theme-hero {
+  background: var(--hero-bg);
+  border-color: var(--hero-border);
+}
+
+.bg-theme-navbar {
+  background: var(--navbar-bg);
+  border-color: var(--navbar-border);
+}
+
+.bg-theme-accent {
+  background-color: var(--accent-primary);
+  color: var(--accent-contrast);
+}
+
+.bg-theme-accent:hover {
+  background-color: var(--accent-primary-hover);
+}
+
+.text-theme-accent {
+  color: var(--accent-primary);
+}
+
+.theme-glow {
+  box-shadow: var(--accent-glow);
+}
+
+/* Frosted Glass Panels */
+.glass-panel {
+  background-color: var(--bg-card-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+}
+
+.glass-card-interactive {
+  background-color: var(--bg-card-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card-interactive:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-accent);
+  box-shadow: var(--accent-glow);
+}
+
+/* Deep Theme Auto-Adaptation for Dark and Ambient Themes */
+[data-theme="cyber-dark"] .bg-white,
+[data-theme="golden-harvest"] .bg-white,
+[data-theme="oceanic-precision"] .bg-white {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="cyber-dark"] .text-stone-900,
+[data-theme="golden-harvest"] .text-stone-900,
+[data-theme="oceanic-precision"] .text-stone-900 {
+  color: var(--text-heading) !important;
+}
+
+[data-theme="cyber-dark"] .text-stone-800,
+[data-theme="golden-harvest"] .text-stone-800,
+[data-theme="oceanic-precision"] .text-stone-800 {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="cyber-dark"] .text-stone-700,
+[data-theme="golden-harvest"] .text-stone-700,
+[data-theme="oceanic-precision"] .text-stone-700,
+[data-theme="cyber-dark"] .text-stone-600,
+[data-theme="golden-harvest"] .text-stone-600,
+[data-theme="oceanic-precision"] .text-stone-600 {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="cyber-dark"] .text-stone-500,
+[data-theme="golden-harvest"] .text-stone-500,
+[data-theme="oceanic-precision"] .text-stone-500,
+[data-theme="cyber-dark"] .text-stone-400,
+[data-theme="golden-harvest"] .text-stone-400,
+[data-theme="oceanic-precision"] .text-stone-400 {
+  color: var(--text-muted) !important;
+}
+
+[data-theme="cyber-dark"] .bg-stone-50,
+[data-theme="golden-harvest"] .bg-stone-50,
+[data-theme="oceanic-precision"] .bg-stone-50,
+[data-theme="cyber-dark"] .bg-stone-100,
+[data-theme="golden-harvest"] .bg-stone-100,
+[data-theme="oceanic-precision"] .bg-stone-100 {
+  background-color: var(--bg-card-subtle) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="cyber-dark"] .border-stone-200,
+[data-theme="golden-harvest"] .border-stone-200,
+[data-theme="oceanic-precision"] .border-stone-200,
+[data-theme="cyber-dark"] .border-stone-300,
+[data-theme="golden-harvest"] .border-stone-300,
+[data-theme="oceanic-precision"] .border-stone-300 {
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="cyber-dark"] .text-\[\#1b4332\],
+[data-theme="golden-harvest"] .text-\[\#1b4332\],
+[data-theme="oceanic-precision"] .text-\[\#1b4332\] {
+  color: var(--text-heading) !important;
+}
+
+[data-theme="cyber-dark"] .text-emerald-950,
+[data-theme="golden-harvest"] .text-emerald-950,
+[data-theme="oceanic-precision"] .text-emerald-950,
+[data-theme="cyber-dark"] .text-emerald-900,
+[data-theme="golden-harvest"] .text-emerald-900,
+[data-theme="oceanic-precision"] .text-emerald-900 {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="cyber-dark"] .text-emerald-800,
+[data-theme="golden-harvest"] .text-emerald-800,
+[data-theme="oceanic-precision"] .text-emerald-800 {
+  color: var(--badge-text) !important;
+}
+
+/* Inputs, Selects, and Textareas */
+[data-theme="cyber-dark"] input,
+[data-theme="cyber-dark"] select,
+[data-theme="cyber-dark"] textarea,
+[data-theme="golden-harvest"] input,
+[data-theme="golden-harvest"] select,
+[data-theme="golden-harvest"] textarea,
+[data-theme="oceanic-precision"] input,
+[data-theme="oceanic-precision"] select,
+[data-theme="oceanic-precision"] textarea {
+  background-color: var(--bg-card-subtle) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+[data-theme="cyber-dark"] input:focus,
+[data-theme="cyber-dark"] select:focus,
+[data-theme="cyber-dark"] textarea:focus,
+[data-theme="golden-harvest"] input:focus,
+[data-theme="golden-harvest"] select:focus,
+[data-theme="golden-harvest"] textarea:focus,
+[data-theme="oceanic-precision"] input:focus,
+[data-theme="oceanic-precision"] select:focus,
+[data-theme="oceanic-precision"] textarea:focus {
+  background-color: var(--bg-card) !important;
+  border-color: var(--accent-primary) !important;
+  outline: none !important;
+}
+
+/* Hero card gradients auto-mapping */
+[data-theme="cyber-dark"] .bg-gradient-to-br.from-\[\#1b4332\],
+[data-theme="cyber-dark"] .bg-gradient-to-r.from-\[\#173e32\],
+[data-theme="golden-harvest"] .bg-gradient-to-br.from-\[\#1b4332\],
+[data-theme="golden-harvest"] .bg-gradient-to-r.from-\[\#173e32\],
+[data-theme="oceanic-precision"] .bg-gradient-to-br.from-\[\#1b4332\],
+[data-theme="oceanic-precision"] .bg-gradient-to-r.from-\[\#173e32\],
+[data-theme="emerald-light"] .bg-gradient-to-br.from-\[\#1b4332\],
+[data-theme="emerald-light"] .bg-gradient-to-r.from-\[\#173e32\] {
+  background: var(--hero-bg) !important;
+  border-color: var(--hero-border) !important;
+}
+
+/* Animated Glow Badges */
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.02); }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 3s infinite ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-page);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .shadow-sm, .shadow-md, .shadow-lg, .shadow-xl {
+    box-shadow: none !important;
+    border: 1px solid #cbd5e1 !important;
+  }
+}

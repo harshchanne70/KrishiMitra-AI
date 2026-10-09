@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Krishi Mitra — Farmer Advisory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --soil-dark:#1f4b3f;
+    --leaf:#3f7d3c;
+    --leaf-light:#e7f2e2;
+    --marigold:#e8a33d;
+    --marigold-dark:#c17f1f;
+    --earth:#6b4226;
+    --cream:#fbf7ee;
+    --card:#ffffff;
+    --ink:#20281f;
+    --ink-soft:#5a6356;
+    --line:#e3ddcc;
+    --danger:#c0533e;
+    --danger-bg:#fbe9e4;
+    --warn-bg:#fdf3e0;
+    --ok-bg:#e8f3e5;
+    --radius:14px;
+    --shadow: 0 2px 10px rgba(31,75,63,.08), 0 1px 2px rgba(31,75,63,.06);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Noto Sans","Noto Sans Devanagari",sans-serif;
+    line-height:1.5;
+    min-height:100vh;
+  }
+  h1,h2,h3,.display{font-family:"Baloo 2","Noto Sans Devanagari",sans-serif;font-weight:700;color:var(--soil-dark);}
+  button{font-family:inherit;}
+  .app{max-width:900px;margin:0 auto;padding:0 16px 60px;}
+
+  /* header */
+  .topbar{
+    background:linear-gradient(135deg,var(--soil-dark),#28624f 60%, var(--leaf));
+    color:#fff;padding:18px 16px 22px;border-radius:0 0 20px 20px;margin-bottom:14px;
+    box-shadow:var(--shadow);
+  }
+  .topbar-row{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{
+    width:42px;height:42px;border-radius:50%;background:var(--marigold);
+    display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;
+    box-shadow:0 2px 6px rgba(0,0,0,.2);
+  }
+  .brand-text .display{color:#fff;font-size:22px;margin:0;line-height:1.1;}
+  .brand-text small{color:#d7e8d3;font-size:12px;}
+  .lang-switch{display:flex;gap:6px;background:rgba(255,255,255,.12);padding:4px;border-radius:10px;}
+  .lang-switch button{
+    border:none;background:transparent;color:#eef7ea;padding:6px 10px;border-radius:7px;
+    cursor:pointer;font-size:13px;font-weight:600;transition:.15s;
+  }
+  .lang-switch button.active{background:var(--marigold);color:#1f2b17;}
+
+  /* furrow progress */
+  .furrow-wrap{max-width:900px;margin:14px auto 18px;padding:0 4px;overflow-x:auto;}
+  .furrow{display:flex;align-items:flex-start;min-width:820px;position:relative;padding:4px 6px;}
+  .furrow-line{position:absolute;top:20px;left:24px;right:24px;height:3px;background:repeating-linear-gradient(90deg,var(--line) 0 8px, transparent 8px 14px);z-index:0;}
+  .furrow-line-fill{position:absolute;top:20px;left:24px;height:3px;background:var(--leaf);z-index:1;transition:width .3s;}
+  .furrow-step{flex:1;text-align:center;position:relative;z-index:2;cursor:pointer;padding:0 2px;}
+  .furrow-dot{
+    width:40px;height:40px;border-radius:50%;background:#fff;border:3px solid var(--line);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:17px;
+    transition:.2s;color:var(--ink-soft);
+  }
+  .furrow-step.done .furrow-dot{background:var(--leaf);border-color:var(--leaf);color:#fff;}
+  .furrow-step.current .furrow-dot{border-color:var(--marigold);box-shadow:0 0 0 4px rgba(232,163,61,.25);color:var(--soil-dark);}
+  .furrow-step.locked{cursor:not-allowed;opacity:.55;}
+  .furrow-label{font-size:11px;color:var(--ink-soft);font-weight:600;max-width:82px;margin:0 auto;line-height:1.2;}
+  .furrow-step.current .furrow-label{color:var(--soil-dark);}
+
+  /* card */
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 20px;margin-bottom:16px;border:1px solid var(--line);}
+  .card h2{margin:0 0 4px;font-size:22px;}
+  .card .subtitle{color:var(--ink-soft);font-size:14px;margin:0 0 18px;}
+  .demo-tag{
+    display:inline-flex;align-items:center;gap:6px;background:var(--warn-bg);color:var(--marigold-dark);
+    font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid #f0d29a;margin-bottom:14px;
+  }
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:13px;font-weight:600;color:var(--soil-dark);margin-bottom:5px;}
+  .field input, .field select, .field textarea{
+    width:100%;padding:11px 12px;border-radius:9px;border:1.5px solid var(--line);
+    font-size:15px;font-family:inherit;background:#fdfcf8;color:var(--ink);
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--leaf);outline-offset:1px;border-color:var(--leaf);}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media (max-width:520px){.field-row{grid-template-columns:1fr;}}
+  .err{color:var(--danger);font-size:12.5px;margin-top:4px;display:none;}
+  .err.show{display:block;}
+  .field input.invalid, .field select.invalid{border-color:var(--danger);}
+
+  .mic-row{display:flex;gap:8px;align-items:center;}
+  .mic-row input{flex:1;}
+  .mic-btn{
+    width:42px;height:42px;border-radius:50%;border:1.5px solid var(--leaf);background:var(--leaf-light);
+    color:var(--soil-dark);font-size:17px;cursor:pointer;flex-shrink:0;transition:.15s;
+  }
+  .mic-btn.recording{background:var(--danger);border-color:var(--danger);color:#fff;animation:pulse 1s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(192,83,62,.5);}70%{box-shadow:0 0 0 10px rgba(192,83,62,0);}100%{box-shadow:0 0 0 0 rgba(192,83,62,0);}}
+  .voice-note{font-size:12px;color:var(--ink-soft);margin-top:5px;min-height:16px;}
+
+  .btn{
+    border:none;border-radius:10px;padding:12px 20px;font-size:15px;font-weight:700;cursor:pointer;transition:.15s;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary{background:var(--leaf);color:#fff;}
+  .btn-primary:hover{background:#356933;}
+  .btn-secondary{background:#fff;color:var(--soil-dark);border:1.5px solid var(--line);}
+  .btn-secondary:hover{background:var(--leaf-light);}
+  .btn-danger{background:var(--danger-bg);color:var(--danger);border:1.5px solid #f0c4b8;}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+  .btn-row{display:flex;justify-content:space-between;gap:10px;margin-top:20px;flex-wrap:wrap;}
+  .btn-row .spacer{flex:1;}
+
+  .chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;}
+  .chip-green{background:var(--ok-bg);color:var(--leaf);}
+  .chip-amber{background:var(--warn-bg);color:var(--marigold-dark);}
+  .chip-red{background:var(--danger-bg);color:var(--danger);}
+
+  .crop-list{display:grid;gap:12px;}
+  .crop-card{border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;transition:.15s;position:relative;}
+  .crop-card:hover{border-color:var(--leaf);}
+  .crop-card.selected{border-color:var(--leaf);background:var(--leaf-light);}
+  .crop-top{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .crop-name{font-weight:700;color:var(--soil-dark);font-size:16px;display:flex;align-items:center;gap:8px;}
+  .score-bar{height:7px;background:var(--line);border-radius:5px;margin-top:8px;overflow:hidden;}
+  .score-fill{height:100%;background:var(--leaf);border-radius:5px;}
+  .crop-meta{font-size:12.5px;color:var(--ink-soft);margin-top:6px;}
+
+  .weather-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+  @media (max-width:600px){.weather-grid{grid-template-columns:repeat(3,1fr);}}
+  .wcard{background:var(--leaf-light);border-radius:10px;padding:10px 6px;text-align:center;}
+  .wcard .wday{font-size:11px;font-weight:700;color:var(--soil-dark);}
+  .wcard .wicon{font-size:26px;margin:4px 0;}
+  .wcard .wtemp{font-size:13px;font-weight:700;}
+  .wcard .wsub{font-size:10.5px;color:var(--ink-soft);}
+  .weather-today{display:flex;gap:18px;align-items:center;background:linear-gradient(120deg,var(--soil-dark),var(--leaf));color:#fff;border-radius:12px;padding:16px 18px;margin-bottom:16px;flex-wrap:wrap;}
+  .weather-today .big{font-size:42px;font-weight:800;font-family:"Baloo 2";}
+  .weather-today .stat{font-size:13px;opacity:.9;}
+
+  .advice-box{background:var(--leaf-light);border-left:4px solid var(--leaf);border-radius:8px;padding:14px 16px;margin-bottom:12px;}
+  .advice-box h3{margin:0 0 6px;font-size:15px;}
+  .advice-box p{margin:0;font-size:14px;color:var(--ink);}
+
+  .upload-zone{
+    border:2px dashed var(--line);border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer;
+    transition:.15s;background:#fdfcf8;
+  }
+  .upload-zone:hover{border-color:var(--leaf);background:var(--leaf-light);}
+  .upload-zone .icon{font-size:34px;}
+  .preview-wrap{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;}
+  .preview-wrap img{width:180px;height:180px;object-fit:cover;border-radius:12px;border:2px solid var(--line);}
+  canvas{display:none;}
+
+  .disease-result{border-radius:12px;padding:16px;margin-top:14px;}
+  .disease-result.healthy{background:var(--ok-bg);border:1.5px solid #b9dcb0;}
+  .disease-result.sick{background:var(--warn-bg);border:1.5px solid #f0d29a;}
+  .disease-result h3{margin:0 0 4px;font-size:18px;}
+  .conf-bar{height:8px;background:rgba(0,0,0,.08);border-radius:5px;overflow:hidden;margin:8px 0;}
+  .conf-fill{height:100%;background:var(--marigold);}
+
+  .alert-item{display:flex;gap:12px;padding:14px 16px;border-radius:10px;margin-bottom:10px;align-items:flex-start;}
+  .alert-item.info{background:var(--ok-bg);}
+  .alert-item.warning{background:var(--warn-bg);}
+  .alert-item.danger{background:var(--danger-bg);}
+  .alert-item .aicon{font-size:20px;}
+  .alert-item .abody{flex:1;}
+  .alert-item .atitle{font-weight:700;font-size:14px;}
+  .alert-item .atext{font-size:13px;color:var(--ink-soft);margin-top:2px;}
+  .alert-item .dismiss{background:none;border:none;cursor:pointer;font-size:16px;color:var(--ink-soft);}
+
+  .history-item{border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+  .history-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+  .history-top strong{color:var(--soil-dark);}
+  .history-meta{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .history-detail{margin-top:10px;font-size:13.5px;background:var(--cream);border-radius:8px;padding:10px 12px;display:none;}
+  .history-detail.open{display:block;}
+  .icon-btn{background:none;border:1.5px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;cursor:pointer;color:var(--ink-soft);}
+
+  .empty-state{text-align:center;padding:30px 10px;color:var(--ink-soft);}
+  .empty-state .icon{font-size:40px;margin-bottom:8px;}
+
+  .toast{
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    background:var(--soil-dark);color:#fff;padding:11px 20px;border-radius:30px;font-size:13.5px;
+    box-shadow:0 4px 16px rgba(0,0,0,.25);z-index:50;opacity:0;pointer-events:none;transition:.25s;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px);}
+  footer.note{text-align:center;font-size:11.5px;color:var(--ink-soft);margin-top:20px;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<canvas id="hiddenCanvas"></canvas>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================= I18N ============================= */
+const I18N = {
+  appName:{en:"Krishi Mitra",hi:"कृषि मित्र",mr:"कृषी मित्र"},
+  tagline:{en:"Your farm advisory companion",hi:"आपका कृषि सलाहकार साथी",mr:"तुमचा शेती सल्लागार सोबती"},
+  demoMode:{en:"⚠ Demo Mode — simulated result, not real agricultural/medical advice",hi:"⚠ डेमो मोड — नकली परिणाम, वास्तविक कृषि/चिकित्सा सलाह नहीं",mr:"⚠ डेमो मोड — नक्कल केलेला निकाल, खरा कृषी/वैद्यकीय सल्ला नाही"},
+  steps:{
+    profile:{en:"Farmer Profile",hi:"किसान प्रोफ़ाइल",mr:"शेतकरी प्रोफाइल"},
+    soil:{en:"Soil & Water",hi:"मिट्टी व पानी",mr:"माती व पाणी"},
+    crop:{en:"Crop Advice",hi:"फसल सलाह",mr:"पीक सल्ला"},
+    weather:{en:"Weather",hi:"मौसम",mr:"हवामान"},
+    irrigation:{en:"Irrigation",hi:"सिंचाई",mr:"सिंचन"},
+    leaf:{en:"Leaf Photo",hi:"पत्ती फोटो",mr:"पान फोटो"},
+    disease:{en:"Disease Check",hi:"रोग जांच",mr:"रोग तपासणी"},
+    advisory:{en:"Advisory",hi:"सलाह",mr:"सल्ला"},
+    alerts:{en:"Alerts",hi:"चेतावनी",mr:"सूचना"},
+    history:{en:"History",hi:"इतिहास",mr:"इतिहास"}
+  },
+  nav:{back:{en:"Back",hi:"पीछे",mr:"मागे"},next:{en:"Next",hi:"आगे",mr:"पुढे"}},
+  profile:{
+    title:{en:"Farmer Profile",hi:"किसान प्रोफ़ाइल",mr:"शेतकरी प्रोफाइल"},
+    sub:{en:"Tell us about yourself. Saved on this device.",hi:"अपने बारे में बताएं। यह जानकारी इस डिवाइस पर सहेजी जाती है।",mr:"तुमच्याबद्दल सांगा. ही माहिती या डिव्हाइसवर जतन केली जाते."},
+    name:{en:"Full name",hi:"पूरा नाम",mr:"पूर्ण नाव"},
+    phone:{en:"Phone number",hi:"फ़ोन नंबर",mr:"फोन नंबर"},
+    village:{en:"Village / Town",hi:"गाँव / शहर",mr:"गाव / शहर"},
+    land:{en:"Land size",hi:"भूमि का आकार",mr:"जमिनीचा आकार"},
+    unit:{en:"Unit",hi:"इकाई",mr:"एकक"},
+    acre:{en:"Acre",hi:"एकड़",mr:"एकर"},
+    hectare:{en:"Hectare",hi:"हेक्टेयर",mr:"हेक्टर"},
+    namePlaceholder:{en:"e.g. Ramesh Patil",hi:"जैसे रमेश पाटील",mr:"उदा. रमेश पाटील"},
+    villagePlaceholder:{en:"e.g. Nagpur",hi:"जैसे नागपुर",mr:"उदा. नागपूर"},
+    reqName:{en:"Please enter your name",hi:"कृपया अपना नाम दर्ज करें",mr:"कृपया तुमचे नाव टाका"},
+    reqPhone:{en:"Enter a valid 10-digit phone number",hi:"मान्य 10-अंकीय फ़ोन नंबर दर्ज करें",mr:"वैध 10-अंकी फोन नंबर टाका"},
+    reqVillage:{en:"Please enter your village/town",hi:"कृपया अपना गाँव/शहर दर्ज करें",mr:"कृपया तुमचे गाव/शहर टाका"},
+    reqLand:{en:"Enter a valid land size",hi:"मान्य भूमि आकार दर्ज करें",mr:"वैध जमिनीचा आकार टाका"}
+  },
+  soil:{
+    title:{en:"Soil & Water Details",hi:"मिट्टी व पानी का विवरण",mr:"माती व पाणी तपशील"},
+    sub:{en:"This helps us recommend the right crops.",hi:"इससे हमें सही फसल सुझाने में मदद मिलती है।",mr:"यामुळे योग्य पीक सुचवण्यास मदत होते."},
+    soilType:{en:"Soil type",hi:"मिट्टी का प्रकार",mr:"मातीचा प्रकार"},
+    ph:{en:"Soil pH (if known)",hi:"मिट्टी का pH (यदि ज्ञात हो)",mr:"मातीचा pH (माहीत असल्यास)"},
+    waterSource:{en:"Water source",hi:"जल स्रोत",mr:"पाण्याचा स्रोत"},
+    waterAvail:{en:"Water availability",hi:"जल उपलब्धता",mr:"पाणी उपलब्धता"},
+    season:{en:"Current season",hi:"वर्तमान मौसम",mr:"सध्याचा हंगाम"},
+    soils:{black:{en:"Black (Regur)",hi:"काली मिट्टी (रेगुर)",mr:"काळी माती (रेगूर)"},red:{en:"Red soil",hi:"लाल मिट्टी",mr:"तांबडी माती"},alluvial:{en:"Alluvial",hi:"जलोढ़",mr:"गाळाची माती"},laterite:{en:"Laterite",hi:"लेटराइट",mr:"जांभी माती"},sandy:{en:"Sandy",hi:"रेतीली",mr:"वालुकामय"},clay:{en:"Clay loam",hi:"चिकनी दोमट",mr:"चिकण माती"}},
+    sources:{well:{en:"Well",hi:"कुआँ",mr:"विहीर"},borewell:{en:"Borewell",hi:"बोरवेल",mr:"बोअरवेल"},canal:{en:"Canal",hi:"नहर",mr:"कालवा"},rain:{en:"Rain-fed only",hi:"केवल वर्षा आधारित",mr:"फक्त पावसावर अवलंबून"}},
+    levels:{low:{en:"Low",hi:"कम",mr:"कमी"},medium:{en:"Medium",hi:"मध्यम",mr:"मध्यम"},high:{en:"High",hi:"अधिक",mr:"जास्त"}},
+    seasons:{kharif:{en:"Kharif (Jun–Oct)",hi:"खरीफ (जून–अक्टू)",mr:"खरीप (जून–ऑक्टो)"},rabi:{en:"Rabi (Nov–Mar)",hi:"रबी (नवं–मार्च)",mr:"रब्बी (नोव्हें–मार्च)"},zaid:{en:"Zaid/Summer (Mar–Jun)",hi:"जायद/ग्रीष्म (मार्च–जून)",mr:"उन्हाळी (मार्च–जून)"}}
+  },
+  crop:{
+    title:{en:"Crop Recommendation",hi:"फसल सिफारिश",mr:"पीक शिफारस"},
+    sub:{en:"Based on your soil, season and water inputs.",hi:"आपकी मिट्टी, मौसम और जल इनपुट के आधार पर।",mr:"तुमची माती, हंगाम व पाणी यावर आधारित."},
+    suitability:{en:"Suitability",hi:"उपयुक्तता",mr:"योग्यता"},
+    water:{en:"Water need",hi:"पानी की आवश्यकता",mr:"पाण्याची गरज"},
+    selectPrompt:{en:"Select a crop to continue",hi:"जारी रखने के लिए एक फसल चुनें",mr:"पुढे जाण्यासाठी पीक निवडा"},
+    selected:{en:"Selected",hi:"चयनित",mr:"निवडलेले"}
+  },
+  weather:{
+    title:{en:"Weather Forecast",hi:"मौसम पूर्वानुमान",mr:"हवामान अंदाज"},
+    sub:{en:"5-day simulated forecast for your village.",hi:"आपके गाँव के लिए 5-दिन का नकली पूर्वानुमान।",mr:"तुमच्या गावासाठी 5-दिवसांचा नक्कल अंदाज."},
+    today:{en:"Today",hi:"आज",mr:"आज"},
+    humidity:{en:"Humidity",hi:"नमी",mr:"आर्द्रता"},
+    rain:{en:"Rain chance",hi:"वर्षा संभावना",mr:"पावसाची शक्यता"},
+    wind:{en:"Wind",hi:"हवा",mr:"वारा"}
+  },
+  irrigation:{
+    title:{en:"Irrigation Advice",hi:"सिंचाई सलाह",mr:"सिंचन सल्ला"},
+    sub:{en:"Recommended watering plan for your selected crop.",hi:"आपकी चयनित फसल के लिए अनुशंसित सिंचाई योजना।",mr:"तुमच्या निवडलेल्या पिकासाठी शिफारस केलेली सिंचन योजना."},
+    interval:{en:"Irrigation interval",hi:"सिंचाई अंतराल",mr:"सिंचन अंतराल"},
+    everyDays:{en:"days",hi:"दिन",mr:"दिवस"},
+    amount:{en:"Estimated water",hi:"अनुमानित पानी",mr:"अंदाजे पाणी"},
+    perAcre:{en:"litres/acre/session",hi:"लीटर/एकड़/सत्र",mr:"लिटर/एकर/सत्र"},
+    method:{en:"Recommended method",hi:"अनुशंसित विधि",mr:"शिफारस केलेली पद्धत"},
+    skip:{en:"Rain expected — you can delay irrigation today.",hi:"वर्षा की संभावना है — आज सिंचाई टाल सकते हैं।",mr:"पाऊस अपेक्षित आहे — आज सिंचन पुढे ढकलू शकता."},
+    proceed:{en:"No significant rain expected — proceed with irrigation as planned.",hi:"कोई महत्वपूर्ण वर्षा अपेक्षित नहीं — योजना अनुसार सिंचाई करें।",mr:"मोठा पाऊस अपेक्षित नाही — नियोजित सिंचन करा."}
+  },
+  leaf:{
+    title:{en:"Leaf Image Upload",hi:"पत्ती छवि अपलोड",mr:"पान प्रतिमा अपलोड"},
+    sub:{en:"Upload a clear photo of the affected leaf.",hi:"प्रभावित पत्ती की स्पष्ट फोटो अपलोड करें।",mr:"बाधित पानाचा स्पष्ट फोटो अपलोड करा."},
+    uploadText:{en:"Tap to upload or take a photo",hi:"अपलोड करने या फोटो लेने के लिए टैप करें",mr:"अपलोड करण्यासाठी किंवा फोटो घेण्यासाठी टॅप करा"},
+    change:{en:"Change photo",hi:"फोटो बदलें",mr:"फोटो बदला"},
+    analyzing:{en:"Analyzing image…",hi:"छवि का विश्लेषण हो रहा है…",mr:"प्रतिमा तपासली जात आहे…"},
+    skipNote:{en:"No photo? You can skip this step.",hi:"फोटो नहीं है? आप इस चरण को छोड़ सकते हैं।",mr:"फोटो नाही? तुम्ही हा टप्पा वगळू शकता."},
+    skip:{en:"Skip this step",hi:"यह चरण छोड़ें",mr:"हा टप्पा वगळा"}
+  },
+  disease:{
+    title:{en:"Disease Detection Result",hi:"रोग पहचान परिणाम",mr:"रोग ओळख निकाल"},
+    sub:{en:"Simulated on-device image analysis.",hi:"डिवाइस पर नकली छवि विश्लेषण।",mr:"डिव्हाइसवर नक्कल केलेले प्रतिमा विश्लेषण."},
+    confidence:{en:"Confidence",hi:"विश्वास स्तर",mr:"विश्वास पातळी"},
+    careTips:{en:"Suggested care tips",hi:"सुझाई गई देखभाल",mr:"सुचवलेली काळजी"},
+    noImage:{en:"No leaf image was provided, so this step was skipped.",hi:"कोई पत्ती छवि नहीं दी गई, इसलिए यह चरण छोड़ा गया।",mr:"कोणतीही पान प्रतिमा दिली नाही, म्हणून हा टप्पा वगळला."}
+  },
+  advisory:{
+    title:{en:"Personalized Advisory",hi:"व्यक्तिगत सलाह",mr:"वैयक्तिक सल्ला"},
+    sub:{en:"A summary built from everything above.",hi:"ऊपर की सभी जानकारी से बना सारांश।",mr:"वरील सर्व माहितीवरून तयार केलेला सारांश."},
+    save:{en:"Save to advisory history",hi:"सलाह इतिहास में सहेजें",mr:"सल्ला इतिहासात जतन करा"},
+    saved:{en:"Saved to history",hi:"इतिहास में सहेजा गया",mr:"इतिहासात जतन केले"},
+    greeting:{en:h=>`Dear ${h}, here is your personalized farm advisory:`,hi:h=>`प्रिय ${h}, यह रही आपकी व्यक्तिगत कृषि सलाह:`,mr:h=>`प्रिय ${h}, ही आहे तुमची वैयक्तिक शेती सल्ला:`}
+  },
+  alerts:{
+    title:{en:"Alerts",hi:"चेतावनियाँ",mr:"सूचना"},
+    sub:{en:"Auto-generated based on weather, soil and crop health.",hi:"मौसम, मिट्टी और फसल स्वास्थ्य के आधार पर स्वतः जनरेट।",mr:"हवामान, माती व पीक आरोग्यावर आधारित स्वयंचलित."},
+    none:{en:"No active alerts right now. All conditions look normal.",hi:"अभी कोई सक्रिय चेतावनी नहीं। सभी स्थितियाँ सामान्य दिखती हैं।",mr:"सध्या कोणतीही सक्रिय सूचना नाही. सर्व स्थिती सामान्य दिसते."},
+    dismiss:{en:"Dismiss",hi:"हटाएं",mr:"काढा"},
+    finish:{en:"Finish workflow",hi:"कार्यप्रवाह समाप्त करें",mr:"कार्यप्रवाह पूर्ण करा"}
+  },
+  history:{
+    title:{en:"Advisory History",hi:"सलाह इतिहास",mr:"सल्ला इतिहास"},
+    sub:{en:"Past advisories saved on this device.",hi:"इस डिवाइस पर सहेजी गई पिछली सलाहें।",mr:"या डिव्हाइसवर जतन केलेला मागील सल्ला."},
+    empty:{en:"No history yet. Complete a workflow and save it.",hi:"अभी तक कोई इतिहास नहीं। एक कार्यप्रवाह पूरा करें और सहेजें।",mr:"अजून इतिहास नाही. एक कार्यप्रवाह पूर्ण करून जतन करा."},
+    view:{en:"View",hi:"देखें",mr:"पहा"},
+    hide:{en:"Hide",hi:"छिपाएं",mr:"लपवा"},
+    delete:{en:"Delete",hi:"हटाएं",mr:"हटवा"},
+    startNew:{en:"Start new advisory",hi:"नई सलाह शुरू करें",mr:"नवीन सल्ला सुरू करा"}
+  },
+  toasts:{
+    profileSaved:{en:"Profile saved",hi:"प्रोफ़ाइल सहेजी गई",mr:"प्रोफाइल जतन झाली"},
+    historyDeleted:{en:"Record deleted",hi:"रिकॉर्ड हटाया गया",mr:"नोंद हटवली"},
+    alertDismissed:{en:"Alert dismissed",hi:"चेतावनी हटाई गई",mr:"सूचना काढली"}
+  },
+  voice:{
+    listening:{en:"Listening…",hi:"सुन रहा है…",mr:"ऐकत आहे…"},
+    notSupported:{en:"Demo Mode: voice recognition isn't supported in this browser. Showing a sample transcript instead.",hi:"डेमो मोड: इस ब्राउज़र में आवाज़ पहचान समर्थित नहीं है। इसके बजाय एक नमूना दिखाया जा रहा है।",mr:"डेमो मोड: या ब्राउझरमध्ये आवाज ओळख समर्थित नाही. त्याऐवजी नमुना दाखवत आहे."},
+    demoSample:{en:"Ramesh Patil",hi:"रमेश पाटील",mr:"रमेश पाटील"},
+    error:{en:"Couldn't hear that clearly, please try again or type instead.",hi:"स्पष्ट रूप से नहीं सुन पाया, कृपया फिर से प्रयास करें या टाइप करें।",mr:"नीट ऐकू आले नाही, कृपया पुन्हा प्रयत्न करा किंवा टाइप करा."}
+  }
+};
+function t(node, ...args){
+  const v = typeof node === "object" && !Array.isArray(node) ? node[state.lang] || node.en : node;
+  return typeof v === "function" ? v(...args) : v;
+}
+
+/* ============================= DATA (demo domain logic) ============================= */
+const CROPS = [
+  {id:"cotton", name:{en:"Cotton",hi:"कपास",mr:"कापूस"}, icon:"🌾", soils:["black","clay"], seasons:["kharif"], water:"medium", ph:[6.0,8.0]},
+  {id:"soybean", name:{en:"Soybean",hi:"सोयाबीन",mr:"सोयाबीन"}, icon:"🌱", soils:["black","alluvial"], seasons:["kharif"], water:"medium", ph:[6.0,7.5]},
+  {id:"tur", name:{en:"Tur (Pigeon Pea)",hi:"तूर (अरहर)",mr:"तूर"}, icon:"🫘", soils:["black","red","clay"], seasons:["kharif"], water:"low", ph:[5.5,7.5]},
+  {id:"jowar", name:{en:"Jowar (Sorghum)",hi:"ज्वार",mr:"ज्वारी"}, icon:"🌿", soils:["black","red","sandy"], seasons:["kharif","rabi"], water:"low", ph:[5.5,8.0]},
+  {id:"wheat", name:{en:"Wheat",hi:"गेहूं",mr:"गहू"}, icon:"🌾", soils:["black","alluvial","clay"], seasons:["rabi"], water:"medium", ph:[6.0,7.5]},
+  {id:"gram", name:{en:"Gram (Chana)",hi:"चना",mr:"हरभरा"}, icon:"🫛", soils:["black","alluvial"], seasons:["rabi"], water:"low", ph:[6.0,7.5]},
+  {id:"onion", name:{en:"Onion",hi:"प्याज",mr:"कांदा"}, icon:"🧅", soils:["alluvial","red","sandy"], seasons:["rabi","zaid"], water:"medium", ph:[6.0,7.0]},
+  {id:"groundnut", name:{en:"Groundnut",hi:"मूंगफली",mr:"भुईमूग"}, icon:"🥜", soils:["sandy","red"], seasons:["kharif","zaid"], water:"medium", ph:[6.0,7.0]},
+  {id:"sugarcane", name:{en:"Sugarcane",hi:"गन्ना",mr:"ऊस"}, icon:"🎋", soils:["black","alluvial","clay"], seasons:["kharif","zaid"], water:"high", ph:[6.5,7.5]},
+  {id:"rice", name:{en:"Rice (Paddy)",hi:"धान",mr:"भात"}, icon:"🌾", soils:["alluvial","clay","laterite"], seasons:["kharif"], water:"high", ph:[5.5,7.0]}
+];
+const RETENTION = {black:0.9, clay:0.95, alluvial:0.7, red:0.55, laterite:0.5, sandy:0.3};
+const WATER_SCORE = {low:1, medium:2, high:3};
+
+function mulberry32(seed){
+  return function(){
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+}
+function hashStr(s){ let h=0; for(let i=0;i<s.length;i++){h=(h<<5)-h+s.charCodeAt(i); h|=0;} return h; }
+
+function computeCropRecommendations(soilState){
+  const {soilType, ph, waterAvailability, season} = soilState;
+  const phVal = ph ? parseFloat(ph) : null;
+  return CROPS.map(c=>{
+    let score = 0;
+    if(c.soils.includes(soilType)) score += 40;
+    if(c.seasons.includes(season)) score += 30;
+    const wDiff = Math.abs(WATER_SCORE[waterAvailability] - WATER_SCORE[c.water]);
+    score += Math.max(0, 20 - wDiff*10);
+    if(phVal!==null){
+      if(phVal>=c.ph[0] && phVal<=c.ph[1]) score += 10;
+      else score += Math.max(0, 10 - Math.abs(phVal - (phVal<c.ph[0]?c.ph[0]:c.ph[1]))*4);
+    } else score += 6;
+    return {...c, score: Math.max(4, Math.min(100, Math.round(score)))};
+  }).sort((a,b)=>b.score-a.score).slice(0,5);
+}
+
+function generateWeather(village, season){
+  const seed = Math.abs(hashStr((village||"village")+new Date().toDateString()));
+  const rand = mulberry32(seed);
+  const baseTemp = season==="rabi" ? 24 : season==="zaid" ? 34 : 29;
+  const days = [];
+  const dayNames = {
+    en:["Today","Tue","Wed","Thu","Fri"], hi:["आज","मंगल","बुध","गुरु","शुक्र"], mr:["आज","मंगळ","बुध","गुरु","शुक्र"]
+  };
+  for(let i=0;i<5;i++){
+    const rainChance = Math.round(rand()*100);
+    const tempSwing = Math.round((rand()-0.5)*8);
+    const humidity = Math.round(40 + rand()*45);
+    const wind = Math.round(6 + rand()*18);
+    let condition = "sunny";
+    if(rainChance>75) condition="storm";
+    else if(rainChance>50) condition="rain";
+    else if(rainChance>28) condition="cloudy";
+    days.push({
+      label: dayNames[state.lang][i] || dayNames.en[i],
+      tempMax: baseTemp + tempSwing + Math.round(rand()*3),
+      tempMin: baseTemp + tempSwing - 6 - Math.round(rand()*2),
+      rainChance, humidity, wind, condition
+    });
+  }
+  return days;
+}
+const WEATHER_ICON = {sunny:"☀️", cloudy:"⛅", rain:"🌧️", storm:"⛈️"};
+
+function computeIrrigation(crop, weather, soilState){
+  const retention = RETENTION[soilState.soilType] ?? 0.6;
+  const waterFactor = {low:0.6, medium:1, high:1.5}[crop.water];
+  const availFactor = {low:0.75, medium:1, high:1.2}[soilState.waterAvailability];
+  let interval = Math.round((7 * (1/waterFactor) * retention) / availFactor);
+  interval = Math.max(2, Math.min(15, interval));
+  const litresPerAcre = Math.round((waterFactor * 18000) * retention);
+  const nearRain = weather.slice(0,2).some(d=>d.rainChance>=60);
+  const method = soilState.soilType==="sandy" ? {en:"Drip irrigation (reduces water loss in sandy soil)",hi:"ड्रिप सिंचाई (रेतीली मिट्टी में जल हानि कम करती है)",mr:"ठिबक सिंचन (वालुकामय मातीत पाणी वाया कमी जाते)"}
+    : crop.water==="high" ? {en:"Flood/basin irrigation",hi:"बाढ़/बेसिन सिंचाई",mr:"पूर/बेसिन सिंचन"}
+    : {en:"Drip or furrow irrigation",hi:"ड्रिप या फरो सिंचाई",mr:"ठिबक किंवा सरी सिंचन"};
+  return {interval, litresPerAcre, nearRain, method};
+}
+
+function analyzeLeafImage(imgEl){
+  const canvas = document.getElementById("hiddenCanvas");
+  const ctx = canvas.getContext("2d");
+  const w = 100, h = 100;
+  canvas.width = w; canvas.height = h;
+  ctx.drawImage(imgEl, 0, 0, w, h);
+  let data;
+  try{ data = ctx.getImageData(0,0,w,h).data; } catch(e){ data = null; }
+  let green=0, yellowBrown=0, dark=0, total=0;
+  if(data){
+    for(let i=0;i<data.length;i+=4){
+      const r=data[i], g=data[i+1], b=data[i+2];
+      const max=Math.max(r,g,b), min=Math.min(r,g,b);
+      const lum = (r+g+b)/3;
+      total++;
+      if(g>r*1.05 && g>b*1.1 && lum>40) green++;
+      else if(r>90 && g>70 && b<90 && r>=g) yellowBrown++;
+      else if(lum<60) dark++;
+    }
+  }
+  if(!total) total=1;
+  const greenPct = green/total, ybPct = yellowBrown/total, darkPct = dark/total;
+  const seed = Math.abs(hashStr(String(imgEl.src.length)+greenPct.toFixed(3)+ybPct.toFixed(3)));
+  const rand = mulberry32(seed);
+  let result;
+  if(darkPct>0.18 && darkPct>ybPct){
+    result = {key:"blight", conf: Math.min(96, Math.round(55+darkPct*180+rand()*8))};
+  } else if(ybPct>0.22){
+    result = {key:"nutrient", conf: Math.min(94, Math.round(50+ybPct*160+rand()*8))};
+  } else if(ybPct>0.10 && greenPct<0.55){
+    result = {key:"mildew", conf: Math.min(90, Math.round(48+ybPct*140+rand()*10))};
+  } else {
+    result = {key:"healthy", conf: Math.min(97, Math.round(60+greenPct*45+rand()*8))};
+  }
+  return result;
+}
+const DISEASE_INFO = {
+  healthy:{ name:{en:"Healthy leaf",hi:"स्वस्थ पत्ती",mr:"निरोगी पान"}, tips:{
+    en:["Leaf shows a strong healthy-green signal.","Continue current watering and nutrient schedule.","Recheck weekly during flowering stage."],
+    hi:["पत्ती में स्वस्थ हरा संकेत मजबूत है।","वर्तमान पानी और पोषक तत्व अनुसूची जारी रखें।","फूल आने की अवस्था में साप्ताहिक जांच करें।"],
+    mr:["पानात निरोगी हिरवा रंग स्पष्ट दिसतो.","सध्याचे पाणी व पोषण वेळापत्रक सुरू ठेवा.","फुलोऱ्याच्या काळात दर आठवड्याला तपासा."]
+  }},
+  blight:{ name:{en:"Possible Leaf Blight",hi:"संभावित पत्ती झुलसा",mr:"शक्य पान करपा"}, tips:{
+    en:["Dark/brown patches detected in the sample.","Remove and destroy severely affected leaves.","Avoid overhead watering; keep foliage dry.","Consult your local Krishi Kendra for a suitable fungicide."],
+    hi:["नमूने में गहरे/भूरे धब्बे पाए गए।","गंभीर रूप से प्रभावित पत्तियों को हटा दें।","ऊपर से पानी देने से बचें; पत्तियों को सूखा रखें।","उपयुक्त फफूंदनाशक हेतु स्थानीय कृषि केंद्र से सलाह लें।"],
+    mr:["नमुन्यात गडद/तपकिरी डाग आढळले.","गंभीर बाधित पाने काढून नष्ट करा.","वरून पाणी देणे टाळा; पाने कोरडी ठेवा.","योग्य बुरशीनाशकासाठी स्थानिक कृषी केंद्राचा सल्ला घ्या."]
+  }},
+  nutrient:{ name:{en:"Possible Nutrient Deficiency",hi:"संभावित पोषक तत्व की कमी",mr:"शक्य पोषक तत्वांची कमतरता"}, tips:{
+    en:["Yellowing pattern detected, often linked to nitrogen/iron deficiency.","Consider a balanced foliar spray after soil test.","Ensure consistent irrigation to aid nutrient uptake."],
+    hi:["पीलापन पाया गया, अक्सर नाइट्रोजन/आयरन की कमी से जुड़ा।","मिट्टी परीक्षण के बाद संतुलित पत्तीय स्प्रे पर विचार करें।","पोषक तत्व अवशोषण हेतु नियमित सिंचाई सुनिश्चित करें।"],
+    mr:["पिवळेपणा आढळला, अनेकदा नायट्रोजन/लोह कमतरतेशी संबंधित.","मातीच्या तपासणीनंतर संतुलित पर्णीय फवारणी विचारात घ्या.","पोषण शोषणासाठी नियमित सिंचन ठेवा."]
+  }},
+  mildew:{ name:{en:"Possible Powdery Mildew",hi:"संभावित चूर्णिल आसिता",mr:"शक्य भुरी रोग"}, tips:{
+    en:["Light powdery/yellow surface pattern detected.","Improve air circulation between plants.","Avoid excess nitrogen; monitor humidity levels."],
+    hi:["हल्का चूर्णिल/पीला सतह पैटर्न पाया गया।","पौधों के बीच हवा का संचार बेहतर करें।","अत्यधिक नाइट्रोजन से बचें; नमी स्तर पर नज़र रखें।"],
+    mr:["हलका भुरकट/पिवळसर पृष्ठभाग आढळला.","झाडांमधील हवा खेळती ठेवा.","जास्त नायट्रोजन टाळा; आर्द्रता तपासत रहा."]
+  }}
+};
+
+/* ============================= STATE ============================= */
+const STEP_ORDER = ["profile","soil","crop","weather","irrigation","leaf","disease","advisory","alerts","history"];
+const STEP_ICON = {profile:"👤",soil:"🌱",crop:"🌾",weather:"⛅",irrigation:"💧",leaf:"🍃",disease:"🔬",advisory:"📋",alerts:"🔔",history:"🕘"};
+
+let state = {
+  lang:"en",
+  stepIndex:0,
+  maxReached:0,
+  profile:{name:"",phone:"",village:"",land:"",unit:"acre"},
+  soilState:{soilType:"black",ph:"",waterSource:"borewell",waterAvailability:"medium",season:"kharif"},
+  cropRecs:[],
+  selectedCrop:null,
+  weather:[],
+  irrigation:null,
+  leafImageData:null,
+  diseaseResult:null,
+  dismissedAlerts:{},
+  history:[],
+  savedThisRun:false,
+  errors:{}
+};
+
+/* ---- persistence ---- */
+async function saveState(){
+  try{
+    await window.storage.set("krishimitra_state", JSON.stringify({
+      lang:state.lang, profile:state.profile, soilState:state.soilState, history:state.history
+    }));
+  }catch(e){ console.warn("storage save failed", e); }
+}
+async function loadState(){
+  try{
+    const res = await window.storage.get("krishimitra_state");
+    if(res && res.value){
+      const parsed = JSON.parse(res.value);
+      state.lang = parsed.lang || "en";
+      state.profile = {...state.profile, ...(parsed.profile||{})};
+      state.soilState = {...state.soilState, ...(parsed.soilState||{})};
+      state.history = parsed.history || [];
+    }
+  }catch(e){ /* no saved state yet */ }
+}
+
+function showToast(msg){
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>el.classList.remove("show"), 2200);
+}
+
+/* ============================= RENDER ============================= */
+function render(){
+  const root = document.getElementById("root");
+  root.innerHTML = `
+    <div class="topbar">
+      <div class="topbar-row">
+        <div class="brand">
+          <div class="brand-mark">🌾</div>
+          <div class="brand-text">
+            <h1 class="display">${t(I18N.appName)}</h1>
+            <small>${t(I18N.tagline)}</small>
+          </div>
+        </div>
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button data-lang="en" class="${state.lang==='en'?'active':''}">EN</button>
+          <button data-lang="hi" class="${state.lang==='hi'?'active':''}">हिंदी</button>
+          <button data-lang="mr" class="${state.lang==='mr'?'active':''}">मराठी</button>
+        </div>
+      </div>
+    </div>
+    <div class="app">
+      ${renderFurrow()}
+      <div id="stepContent">${renderStep()}</div>
+      <footer class="note">${state.lang==='en'?'Krishi Mitra — offline demo build. All data stays on this device.':state.lang==='hi'?'कृषि मित्र — ऑफ़लाइन डेमो बिल्ड। सभी डेटा इस डिवाइस पर ही रहता है।':'कृषी मित्र — ऑफलाइन डेमो बिल्ड. सर्व डेटा या डिव्हाइसवरच राहतो.'}</footer>
+    </div>
+  `;
+  attachHandlers();
+}
+
+function renderFurrow(){
+  const fillPct = STEP_ORDER.length>1 ? (state.stepIndex/(STEP_ORDER.length-1))*100 : 0;
+  return `
+    <div class="furrow-wrap">
+      <div class="furrow">
+        <div class="furrow-line"></div>
+        <div class="furrow-line-fill" style="width:calc(${fillPct}% * 0.86)"></div>
+        ${STEP_ORDER.map((s,i)=>{
+          const cls = i===state.stepIndex?"current":(i<=state.maxReached? (i<state.stepIndex?"done":"") : "locked");
+          return `<div class="furrow-step ${cls}" data-step-jump="${i}">
+            <div class="furrow-dot">${i<state.stepIndex && i<=state.maxReached ? "✓" : STEP_ICON[s]}</div>
+            <div class="furrow-label">${t(I18N.steps[s])}</div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function renderStep(){
+  const s = STEP_ORDER[state.stepIndex];
+  switch(s){
+    case "profile": return stepProfile();
+    case "soil": return stepSoil();
+    case "crop": return stepCrop();
+    case "weather": return stepWeather();
+    case "irrigation": return stepIrrigation();
+    case "leaf": return stepLeaf();
+    case "disease": return stepDisease();
+    case "advisory": return stepAdvisory();
+    case "alerts": return stepAlerts();
+    case "history": return stepHistory();
+    default: return "";
+  }
+}
+
+/* ---- STEP 1: Profile ---- */
+function stepProfile(){
+  const p = state.profile, e = state.errors;
+  return `
+  <div class="card">
+    <h2>${t(I18N.profile.title)}</h2>
+    <p class="subtitle">${t(I18N.profile.sub)}</p>
+    <div class="field">
+      <label>${t(I18N.profile.name)}</label>
+      <div class="mic-row">
+        <input type="text" id="f-name" placeholder="${t(I18N.profile.namePlaceholder)}" value="${escapeHtml(p.name)}" class="${e.name?'invalid':''}">
+        <button class="mic-btn" id="mic-name" type="button" aria-label="Voice input" title="Voice input">🎤</button>
+      </div>
+      <div class="voice-note" id="mic-name-note"></div>
+      <div class="err ${e.name?'show':''}">${t(I18N.profile.reqName)}</div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>${t(I18N.profile.phone)}</label>
+        <input type="tel" id="f-phone" placeholder="9876543210" value="${escapeHtml(p.phone)}" class="${e.phone?'invalid':''}">
+        <div class="err ${e.phone?'show':''}">${t(I18N.profile.reqPhone)}</div>
+      </div>
+      <div class="field">
+        <label>${t(I18N.profile.village)}</label>
+        <input type="text" id="f-village" placeholder="${t(I18N.profile.villagePlaceholder)}" value="${escapeHtml(p.village)}" class="${e.village?'invalid':''}">
+        <div class="err ${e.village?'show':''}">${t(I18N.profile.reqVillage)}</div>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>${t(I18N.profile.land)}</label>
+        <input type="number" min="0" step="0.1" id="f-land" placeholder="2.5" value="${escapeHtml(p.land)}" class="${e.land?'invalid':''}">
+        <div class="err ${e.land?'show':''}">${t(I18N.profile.reqLand)}</div>
+      </div>
+      <div class="field">
+        <label>${t(I18N.profile.unit)}</label>
+        <select id="f-unit">
+          <option value="acre" ${p.unit==='acre'?'selected':''}>${t(I18N.profile.acre)}</option>
+          <option value="hectare" ${p.unit==='hectare'?'selected':''}>${t(I18N.profile.hectare)}</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row"><div class="spacer"></div>
+      <button class="btn btn-primary" id="btn-next">${t(I18N.nav.next)} →</button>
+    </div>
+  </div>`;
+}
+
+/* ---- STEP 2: Soil & Water ---- */
+function stepSoil(){
+  const s = state.soilState;
+  const soilOpts = Object.entries(I18N.soil.soils).map(([k,v])=>`<option value="${k}" ${s.soilType===k?'selected':''}>${t(v)}</option>`).join("");
+  const srcOpts = Object.entries(I18N.soil.sources).map(([k,v])=>`<option value="${k}" ${s.waterSource===k?'selected':''}>${t(v)}</option>`).join("");
+  const lvlOpts = Object.entries(I18N.soil.levels).map(([k,v])=>`<option value="${k}" ${s.waterAvailability===k?'selected':''}>${t(v)}</option>`).join("");
+  const seasonOpts = Object.entries(I18N.soil.seasons).map(([k,v])=>`<option value="${k}" ${s.season===k?'selected':''}>${t(v)}</option>`).join("");
+  return `
+  <div class="card">
+    <h2>${t(I18N.soil.title)}</h2>
+    <p class="subtitle">${t(I18N.soil.sub)}</p>
+    <div class="field-row">
+      <div class="field"><label>${t(I18N.soil.soilType)}</label><select id="s-soilType">${soilOpts}</select></div>
+      <div class="field"><label>${t(I18N.soil.ph)}</label><input type="number" step="0.1" min="3" max="10" id="s-ph" placeholder="6.5" value="${escapeHtml(s.ph)}"></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>${t(I18N.soil.waterSource)}</label><select id="s-waterSource">${srcOpts}</select></div>
+      <div class="field"><label>${t(I18N.soil.waterAvail)}</label><select id="s-waterAvailability">${lvlOpts}</select></div>
+    </div>
+    <div class="field"><label>${t(I18N.soil.season)}</label><select id="s-season">${seasonOpts}</select></div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btn-back">← ${t(I18N.nav.back)}</button>
+      <button class="btn btn-primary" id="btn-next">${t(I18N.nav.next)} →</button>
+    </div>
+  </div>`;
+}
+
+/* ---- STEP 3: Crop recommendation ---- */
+function stepCrop(){
+  if(state.cropRecs.length===0){
+    state.cropRecs = computeCropRecommendations(state.soilState);
+  }
+  const list = state.cropRecs.map(c=>{
+    const sel = state.selectedCrop && state.selectedCrop.id===c.id;
+    return `<div class="crop-card ${sel?'selected':''}" data-crop="${c.id}">
+      <div class="crop-top">
+        <div class="crop-name">${c.icon} ${t(c.name)}</div>
+        <span class="chip ${c.score>=70?'chip-green':c.score>=45?'chip-amber':'chip-red'}">${c.score}%</span>
+      </div>
+      <div class="score-bar"><div class="score-fill" style="width:${c.score}%"></div></div>
+      <div class="crop-meta">${t(I18N.crop.water)}: ${t(I18N.soil.levels[c.water])}${sel?` · <strong>${t(I18N.crop.selected)} ✓</strong>`:''}</div>
+    </div>`;
+  }).join("");
+  return `
+  <div class="card">
+    <h2>${t(I18N.crop.title)}</h2>
+    <p class="subtitle">${t(I18N.crop.sub)}</p>
+    <div class="crop-list">${list}</div>
+    ${!state.selectedCrop ? `<p class="err show" style="margin-top:10px;">${t(I18N.crop.selectPrompt)}</p>` : ""}
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btn-back">← ${t(I18N.nav.back)}</button>
+      <button class="btn btn-primary" id="btn-next" ${!state.selectedCrop?'disabled':''}>${t(I18N.nav.next)} →</button>
+    </div>
+  </div>`;
+}
+
+/* ---- STEP 4: Weather ---- */
+function stepWeather(){
+  if(state.weather.length===0){
+    state.weather = generateWeather(state.profile.village, state.soilState.season);
+  }
+  const today = state.weather[0];
+  const rest = state.weather.map((d,i)=>`
+    <div class="wcard">
+      <div class="wday">${d.label}</div>
+      <div class="wicon">${WEATHER_ICON[d.condition]}</div>
+      <div class="wtemp">${d.tempMax}° / ${d.tempMin}°</div>
+      <div class="wsub">💧${d.rainChance}%</div>
+    </div>`).join("");
+  return `
+  <div class="card">
+    <h2>${t(I18N.weather.title)}</h2>
+    <p class="subtitle">${t(I18N.weather.sub)}</p>
+    <span class="demo-tag">${t(I18N.demoMode)}</span>
+    <div class="weather-today">
+      <div class="big">${today.tempMax}°C</div>
+      <div>
+        <div class="stat">${WEATHER_ICON[today.condition]} ${t(I18N.weather.today)} — ${state.profile.village || "—"}</div>
+        <div class="stat">${t(I18N.weather.humidity)}: ${today.humidity}% · ${t(I18N.weather.rain)}: ${today.rainChance}% · ${t(I18N.weather.wind)}: ${today.wind} km/h</div>
+      </div>
+    </div>
+    <div class="weather-grid">${rest}</div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btn-back">← ${t(I18N.nav.back)}</button>
+      <button class="btn btn-primary" id="btn-next">${t(I18N.nav.next)} →</button>
+    </div>
+  </div>`;
+}
+
+/* ---- STEP 5: Irrigation ---- */
+function stepIrrigation(){
+  if(!state.irrigation){
+    state.irrigation = computeIrrigation(state.selectedCrop, state.weather, state.soilState);
+  }
+  const irr = state.irrigation;
+  return `
+  <div class="card">
+    <h2>${t(I18N.irrigation.title)}</h2>
+    <p class="subtitle">${t(I18N.irrigation.sub)} (${state.selectedCrop.icon} ${t(state.selectedCrop.name)})</p>
+    <span class="demo-tag">${t(I18N.demoMode)}</span>
+    <div class="advice-box">
+      <h3>💧 ${t(I18N.irrigation.interval)}: ${irr.interval} ${t(I18N.irrigation.everyDays)}</h3>
+      <p>${t(I18N.irrigation.amount)}: <strong>${irr.litresPerAcre.toLocaleString()}</strong> ${t(I18N.irrigation.perAcre)}</p>
+    </div>
+    <div class="advice-box">
+      <h3>🚿 ${t(I18N.irrigation.method)}</h3>
+      <p>${t(irr.method)}</p>
+    </div>
+    <div class="advice-box" style="border-left-color:${irr.nearRain?'#e8a33d':'#3f7d3c'};background:${irr.nearRain?'var(--warn-bg)':'var(--leaf-light)'}">
+      <h3>${irr.nearRain?'🌧️':'☀️'} ${irr.nearRain? t(I18N.irrigation.skip): t(I18N.irrigation.proceed)}</h3>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btn-back">← ${t(I18N.nav.back)}</button>
+      <button class="btn btn-primary" id="btn-next">${t(I18N.nav.next)} →</button>
+    </div>
+  </div>`;
+}
+
+/* ---- STEP 6: Leaf upload ---- */
+function stepLeaf(){
+  return `
+  <div class="card">
+    <h2>${t(I18N.leaf.title)}</h2>
+    <p class="subtitle">${t(I18N.leaf.sub)}</p>
+    ${state.leafImageData ? `
+      <div class="preview-wrap">
+        <img src="${state.leafImageData}" alt="leaf preview">
+        <div>
+          <button class="btn btn-secondary" id="btn-change-photo">📷 ${t(I18N.leaf.change)}</button>
+          <input type="file" accept="image/*" id="f-leaf-hidden" style="display:none">
+        </div>
+      </div>
+    ` : `
+      <div class="upload-zone" id="upload-zone">
+        <div class="icon">📷</div>
+        <p>${t(I18N.leaf.uploadText)}</p>
+        <input type="file" accept="image/*" id="f-leaf" style="display:none">
+      </div>
+      <p style="font-size:12.5px;color:var(--ink-soft);margin-top:8px;">${t(I18N.leaf.skipNote)}</p>
+    `}
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btn-back">← ${t(I18N.nav.back)}</button>
+      <div class="spacer"></div>
+      ${!state.leafImageData ? `<button class="btn btn-secondary" id="btn-skip-leaf">${t(I18N.leaf.skip)}</button>` : ""}
+      <button class="btn btn-primary" id="btn-next" ${!state.leafImageData?'':''}>${t(I18N.nav.next)} →</button>
+    </div>
+  </div>`;
+}
+
+/* ---- STEP 7: Disease result ---- */
+function stepDisease(){
+  if(!state.leafImageData){
+    return `
+    <div class="card">
+      <h2>${t(I18N.disease.title)}</h2>
+      <div class="empty-state"><div class="icon">🍃</div><p>${t(I18N.disease.noImage)}</p></div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="btn-back">← ${t(I18N.nav.back)}</button>
+        <button class="btn btn-primary" id="btn-next">${t(I18N.nav.next)} →</button>
+      </div>
+    </div>`;
+  }
+  const r = state.diseaseResult;
+  const info = DISEASE_INFO[r.key];
+  const isHealthy = r.key==="healthy";
+  return `
+  <div class="card">
+    <h2>${t(I18N.disease.title)}</h2>
+    <p class="subtitle">${t(I18N.disease.sub)}</p>
+    <span class="demo-tag">${t(I18N.demoMode)}</span>
+    <div class="preview-wrap">
+      <img src="${state.leafImageData}" alt="leaf">
+      <div style="flex:1;min-width:220px;">
+        <div class="disease-result ${isHealthy?'healthy':'sick'}">
+          <h3>${isHealthy?'✅':'⚠️'} ${t(info.name)}</h3>
+          <div>${t(I18N.disease.confidence)}: <strong>${r.conf}%</strong></div>
+          <div class="conf-bar"><div class="conf-fill" style="width:${r.conf}%"></div></div>
+          <h4 style="margin:10px 0 4px;font-size:13.5px;color:var(--soil-dark);">${t(I18N.disease.careTips)}</h4>
+          <ul style="margin:0;padding-left:18px;font-size:13.5px;">
+            ${t(info.tips).map(tip=>`<li>${tip}</li>`).join("")}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btn-back">← ${t(I18N.nav.back)}</button>
+      <button class="btn btn-primary" id="btn-next">${t(I18N.nav.next)} →</button>
+    </div>
+  </div>`;
+}
+
+/* ---- STEP 8: Advisory ---- */
+function stepAdvisory(){
+  const p = state.profile, crop = state.selectedCrop, irr = state.irrigation, today = state.weather[0];
+  const disease = state.diseaseResult ? DISEASE_INFO[state.diseaseResult.key] : null;
+  return `
+  <div class="card">
+    <h2>${t(I18N.advisory.title)}</h2>
+    <p class="subtitle">${t(I18N.advisory.sub)}</p>
+    <span class="demo-tag">${t(I18N.demoMode)}</span>
+    <p style="font-weight:600;color:var(--soil-dark);">${t(I18N.advisory.greeting, p.name||"Farmer")}</p>
+
+    <div class="advice-box">
+      <h3>🌾 ${t(I18N.steps.crop)}</h3>
+      <p>${crop.icon} <strong>${t(crop.name)}</strong> — ${t(I18N.crop.suitability)}: ${crop.score}%, ${t(I18N.soil.seasons[state.soilState.season])}.</p>
+    </div>
+    <div class="advice-box">
+      <h3>⛅ ${t(I18N.steps.weather)}</h3>
+      <p>${WEATHER_ICON[today.condition]} ${today.tempMax}°/${today.tempMin}°C, ${t(I18N.weather.rain)} ${today.rainChance}%, ${t(I18N.weather.humidity)} ${today.humidity}%.</p>
+    </div>
+    <div class="advice-box">
+      <h3>💧 ${t(I18N.steps.irrigation)}</h3>
+      <p>${t(I18N.irrigation.interval)}: ${irr.interval} ${t(I18N.irrigation.everyDays)} · ${irr.litresPerAcre.toLocaleString()} ${t(I18N.irrigation.perAcre)}. ${irr.nearRain?t(I18N.irrigation.skip):t(I18N.irrigation.proceed)}</p>
+    </div>
+    ${disease ? `<div class="advice-box">
+      <h3>🔬 ${t(I18N.steps.disease)}</h3>
+      <p><strong>${t(disease.name)}</strong> (${state.diseaseResult.conf}%). ${t(disease.tips)[0]}</p>
+    </div>` : ""}
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btn-back">← ${t(I18N.nav.back)}</button>
+      <div class="spacer"></div>
+      <button class="btn ${state.savedThisRun?'btn-secondary':'btn-primary'}" id="btn-save-history" ${state.savedThisRun?'disabled':''}>
+        ${state.savedThisRun ? "✓ "+t(I18N.advisory.saved) : "💾 "+t(I18N.advisory.save)}
+      </button>
+      <button class="btn btn-primary" id="btn-next">${t(I18N.nav.next)} →</button>
+    </div>
+  </div>`;
+}
+
+/* ---- STEP 9: Alerts ---- */
+function buildAlerts(){
+  const alerts = [];
+  const weather = state.weather, crop = state.selectedCrop, disease = state.diseaseResult;
+  if(weather && weather.length){
+    weather.slice(0,3).forEach((d,i)=>{
+      if(d.rainChance>=75){
+        alerts.push({id:`rain-${i}`, level:"danger", icon:"⛈️",
+          title:{en:"Heavy rain alert",hi:"भारी वर्षा चेतावनी",mr:"मुसळधार पाऊस सूचना"},
+          text:{en:`${d.rainChance}% rain chance expected on ${d.label}. Secure stored produce and delay spraying.`,
+                hi:`${d.label} को ${d.rainChance}% वर्षा की संभावना। भंडारित उपज सुरक्षित करें और छिड़काव टालें।`,
+                mr:`${d.label} रोजी ${d.rainChance}% पावसाची शक्यता. साठवलेले पीक सुरक्षित करा व फवारणी टाळा.`}});
+      }
+      if(d.tempMax>=40){
+        alerts.push({id:`heat-${i}`, level:"warning", icon:"🌡️",
+          title:{en:"Heat stress alert",hi:"गर्मी तनाव चेतावनी",mr:"उष्णता ताण सूचना"},
+          text:{en:`High temperature (${d.tempMax}°C) expected on ${d.label}. Irrigate early morning or evening.`,
+                hi:`${d.label} को उच्च तापमान (${d.tempMax}°C) अपेक्षित। सुबह जल्दी या शाम को सिंचाई करें।`,
+                mr:`${d.label} रोजी जास्त तापमान (${d.tempMax}°C) अपेक्षित. पहाटे किंवा संध्याकाळी सिंचन करा.`}});
+      }
+    });
+  }
+  if(disease && disease.key!=="healthy"){
+    const info = DISEASE_INFO[disease.key];
+    alerts.push({id:"disease", level:"warning", icon:"🔬",
+      title:{en:"Crop health alert",hi:"फसल स्वास्थ्य चेतावनी",mr:"पीक आरोग्य सूचना"},
+      text:{en:`${t(info.name)} detected (${disease.conf}% confidence) — see Advisory tab for care tips.`,
+            hi:`${t(info.name)} पाया गया (${disease.conf}% विश्वास) — देखभाल हेतु सलाह टैब देखें।`,
+            mr:`${t(info.name)} आढळले (${disease.conf}% विश्वास) — काळजीसाठी सल्ला टॅब पहा.`}});
+  }
+  if(crop && state.soilState.ph){
+    const phVal = parseFloat(state.soilState.ph);
+    if(phVal && (phVal<crop.ph[0] || phVal>crop.ph[1])){
+      alerts.push({id:"ph", level:"info", icon:"🧪",
+        title:{en:"Soil pH mismatch",hi:"मिट्टी pH बेमेल",mr:"माती pH विसंगती"},
+        text:{en:`Soil pH ${phVal} is outside the ideal range (${crop.ph[0]}–${crop.ph[1]}) for ${t(crop.name)}. Consider soil amendment.`,
+              hi:`मिट्टी pH ${phVal}, ${t(crop.name)} के लिए आदर्श सीमा (${crop.ph[0]}–${crop.ph[1]}) से बाहर है। मिट्टी सुधार पर विचार करें।`,
+              mr:`माती pH ${phVal}, ${t(crop.name)} साठी आदर्श मर्यादेबाहेर (${crop.ph[0]}–${crop.ph[1]}) आहे. माती सुधारणा विचारात घ्या.`}});
+    }
+  }
+  return alerts.filter(a=>!state.dismissedAlerts[a.id]);
+}
+function stepAlerts(){
+  const alerts = buildAlerts();
+  return `
+  <div class="card">
+    <h2>${t(I18N.alerts.title)}</h2>
+    <p class="subtitle">${t(I18N.alerts.sub)}</p>
+    ${alerts.length===0 ? `<div class="empty-state"><div class="icon">✅</div><p>${t(I18N.alerts.none)}</p></div>` :
+      alerts.map(a=>`
+      <div class="alert-item ${a.level}" data-alert-id="${a.id}">
+        <div class="aicon">${a.icon}</div>
+        <div class="abody">
+          <div class="atitle">${t(a.title)}</div>
+          <div class="atext">${t(a.text)}</div>
+        </div>
+        <button class="dismiss" data-dismiss="${a.id}" aria-label="Dismiss">✕</button>
+      </div>`).join("")}
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="btn-back">← ${t(I18N.nav.back)}</button>
+      <button class="btn btn-primary" id="btn-next">${t(I18N.alerts.finish)} →</button>
+    </div>
+  </div>`;
+}
+
+/* ---- STEP 10: History ---- */
+function stepHistory(){
+  const items = [...state.history].reverse();
+  return `
+  <div class="card">
+    <h2>${t(I18N.history.title)}</h2>
+    <p class="subtitle">${t(I18N.history.sub)}</p>
+    ${items.length===0 ? `<div class="empty-state"><div class="icon">🗂️</div><p>${t(I18N.history.empty)}</p></div>` :
+      items.map(rec=>`
+      <div class="history-item" data-rec-id="${rec.id}">
+        <div class="history-top">
+          <div>
+            <strong>${escapeHtml(rec.name)}</strong> — ${rec.cropIcon} ${rec.cropName}
+            <div class="history-meta">${new Date(rec.ts).toLocaleString()} · ${rec.village||"—"}</div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button class="icon-btn" data-view="${rec.id}">${t(I18N.history.view)}</button>
+            <button class="icon-btn" data-del="${rec.id}" style="color:var(--danger);border-color:#f0c4b8;">${t(I18N.history.delete)}</button>
+          </div>
+        </div>
+        <div class="history-detail" id="detail-${rec.id}">
+          <div>🌾 ${rec.cropName} — ${rec.cropScore}%</div>
+          <div>⛅ ${rec.weatherSummary}</div>
+          <div>💧 ${rec.irrigationSummary}</div>
+          ${rec.diseaseSummary ? `<div>🔬 ${rec.diseaseSummary}</div>` : ""}
+        </div>
+      </div>`).join("")}
+    <div class="btn-row"><div class="spacer"></div>
+      <button class="btn btn-primary" id="btn-start-new">🔄 ${t(I18N.history.startNew)}</button>
+    </div>
+  </div>`;
+}
+
+/* ============================= HANDLERS ============================= */
+function escapeHtml(s){
+  return String(s??"").replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function goStep(idx){
+  state.stepIndex = idx;
+  state.maxReached = Math.max(state.maxReached, idx);
+  window.scrollTo({top:0, behavior:"smooth"});
+  render();
+}
+
+function validateProfile(){
+  const name = document.getElementById("f-name").value.trim();
+  const phone = document.getElementById("f-phone").value.trim();
+  const village = document.getElementById("f-village").value.trim();
+  const land = document.getElementById("f-land").value.trim();
+  const unit = document.getElementById("f-unit").value;
+  const errors = {};
+  if(!name) errors.name = true;
+  if(!/^[0-9]{10}$/.test(phone.replace(/\D/g,""))) errors.phone = true;
+  if(!village) errors.village = true;
+  if(!land || isNaN(parseFloat(land)) || parseFloat(land)<=0) errors.land = true;
+  state.errors = errors;
+  state.profile = {name, phone, village, land, unit};
+  return Object.keys(errors).length===0;
+}
+
+function attachHandlers(){
+  // language
+  document.querySelectorAll("[data-lang]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      state.lang = btn.getAttribute("data-lang");
+      saveState();
+      render();
+    });
+  });
+  // furrow jump
+  document.querySelectorAll("[data-step-jump]").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const idx = parseInt(el.getAttribute("data-step-jump"),10);
+      if(idx<=state.maxReached) goStep(idx);
+    });
+  });
+
+  const back = document.getElementById("btn-back");
+  if(back) back.addEventListener("click", ()=>goStep(Math.max(0,state.stepIndex-1)));
+
+  const next = document.getElementById("btn-next");
+  if(next) next.addEventListener("click", onNext);
+
+  const stepName = STEP_ORDER[state.stepIndex];
+
+  if(stepName==="profile"){
+    const micBtn = document.getElementById("mic-name");
+    if(micBtn) micBtn.addEventListener("click", ()=>voiceInput("f-name","mic-name","mic-name-note"));
+  }
+
+  if(stepName==="soil"){
+    // no-op; values read on next
+  }
+
+  if(stepName==="crop"){
+    document.querySelectorAll("[data-crop]").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const id = el.getAttribute("data-crop");
+        state.selectedCrop = state.cropRecs.find(c=>c.id===id);
+        state.irrigation = null; // recompute later
+        render();
+      });
+    });
+  }
+
+  if(stepName==="leaf"){
+    const zone = document.getElementById("upload-zone");
+    const inp = document.getElementById("f-leaf");
+    if(zone && inp){
+      zone.addEventListener("click", ()=>inp.click());
+      inp.addEventListener("change", handleLeafFile);
+    }
+    const changeBtn = document.getElementById("btn-change-photo");
+    const hiddenInp = document.getElementById("f-leaf-hidden");
+    if(changeBtn && hiddenInp){
+      changeBtn.addEventListener("click", ()=>hiddenInp.click());
+      hiddenInp.addEventListener("change", handleLeafFile);
+    }
+    const skipBtn = document.getElementById("btn-skip-leaf");
+    if(skipBtn) skipBtn.addEventListener("click", ()=>{ state.leafImageData=null; state.diseaseResult=null; goStep(state.stepIndex+1); });
+  }
+
+  if(stepName==="advisory"){
+    const saveBtn = document.getElementById("btn-save-history");
+    if(saveBtn) saveBtn.addEventListener("click", saveToHistory);
+  }
+
+  if(stepName==="alerts"){
+    document.querySelectorAll("[data-dismiss]").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const id = el.getAttribute("data-dismiss");
+        state.dismissedAlerts[id] = true;
+        showToast(t(I18N.toasts.alertDismissed));
+        render();
+      });
+    });
+  }
+
+  if(stepName==="history"){
+    document.querySelectorAll("[data-view]").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const id = el.getAttribute("data-view");
+        const detail = document.getElementById("detail-"+id);
+        const open = detail.classList.toggle("open");
+        el.textContent = open ? t(I18N.history.hide) : t(I18N.history.view);
+      });
+    });
+    document.querySelectorAll("[data-del]").forEach(el=>{
+      el.addEventListener("click", ()=>{
+        const id = el.getAttribute("data-del");
+        state.history = state.history.filter(r=>r.id!==id);
+        saveState();
+        showToast(t(I18N.toasts.historyDeleted));
+        render();
+      });
+    });
+    const startNew = document.getElementById("btn-start-new");
+    if(startNew) startNew.addEventListener("click", startNewWorkflow);
+  }
+}
+
+function onNext(){
+  const stepName = STEP_ORDER[state.stepIndex];
+  if(stepName==="profile"){
+    if(!validateProfile()){ render(); return; }
+    saveState();
+    showToast(t(I18N.toasts.profileSaved));
+  }
+  if(stepName==="soil"){
+    state.soilState = {
+      soilType: document.getElementById("s-soilType").value,
+      ph: document.getElementById("s-ph").value,
+      waterSource: document.getElementById("s-waterSource").value,
+      waterAvailability: document.getElementById("s-waterAvailability").value,
+      season: document.getElementById("s-season").value
+    };
+    state.cropRecs = []; // force recompute
+    state.selectedCrop = null;
+    state.weather = [];
+    state.irrigation = null;
+    saveState();
+  }
+  if(stepName==="crop" && !state.selectedCrop){ render(); return; }
+  goStep(Math.min(STEP_ORDER.length-1, state.stepIndex+1));
+}
+
+function handleLeafFile(ev){
+  const file = ev.target.files && ev.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    state.leafImageData = reader.result;
+    const img = new Image();
+    img.onload = () => {
+      state.diseaseResult = analyzeLeafImage(img);
+      render();
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveToHistory(){
+  const crop = state.selectedCrop, today = state.weather[0], irr = state.irrigation;
+  const rec = {
+    id: "h"+Date.now(),
+    ts: Date.now(),
+    name: state.profile.name,
+    village: state.profile.village,
+    cropIcon: crop.icon,
+    cropName: t(crop.name),
+    cropScore: crop.score,
+    weatherSummary: `${today.tempMax}°/${today.tempMin}°C, ${t(I18N.weather.rain)} ${today.rainChance}%`,
+    irrigationSummary: `${irr.interval} ${t(I18N.irrigation.everyDays)}, ${irr.litresPerAcre.toLocaleString()} ${t(I18N.irrigation.perAcre)}`,
+    diseaseSummary: state.diseaseResult ? `${t(DISEASE_INFO[state.diseaseResult.key].name)} (${state.diseaseResult.conf}%)` : null
+  };
+  state.history.push(rec);
+  state.savedThisRun = true;
+  saveState();
+  showToast(t(I18N.advisory.saved));
+  render();
+}
+
+function startNewWorkflow(){
+  state.stepIndex = 0;
+  state.maxReached = 0;
+  state.soilState = {soilType:"black",ph:"",waterSource:"borewell",waterAvailability:"medium",season:"kharif"};
+  state.cropRecs = [];
+  state.selectedCrop = null;
+  state.weather = [];
+  state.irrigation = null;
+  state.leafImageData = null;
+  state.diseaseResult = null;
+  state.dismissedAlerts = {};
+  state.savedThisRun = false;
+  render();
+}
+
+/* ---- voice input (real Web Speech API when available, demo fallback otherwise) ---- */
+function voiceInput(inputId, btnId, noteId){
+  const input = document.getElementById(inputId);
+  const btn = document.getElementById(btnId);
+  const note = document.getElementById(noteId);
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(SR){
+    try{
+      const rec = new SR();
+      rec.lang = state.lang==="hi" ? "hi-IN" : state.lang==="mr" ? "mr-IN" : "en-IN";
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+      btn.classList.add("recording");
+      note.textContent = t(I18N.voice.listening);
+      rec.onresult = (e)=>{
+        const transcript = e.results[0][0].transcript;
+        input.value = transcript;
+        state.profile.name = transcript;
+        note.textContent = "";
+        btn.classList.remove("recording");
+      };
+      rec.onerror = ()=>{
+        btn.classList.remove("recording");
+        note.textContent = t(I18N.voice.error);
+      };
+      rec.onend = ()=>{ btn.classList.remove("recording"); };
+      rec.start();
+      return;
+    }catch(e){ /* fall through to demo */ }
+  }
+  // Demo fallback: simulate listening then fill sample transcript
+  btn.classList.add("recording");
+  note.textContent = t(I18N.voice.listening);
+  setTimeout(()=>{
+    btn.classList.remove("recording");
+    note.textContent = t(I18N.voice.notSupported);
+    input.value = t(I18N.voice.demoSample);
+    state.profile.name = t(I18N.voice.demoSample);
+  }, 1400);
+}
+
+/* ============================= INIT ============================= */
+(async function init(){
+  await loadState();
+  render();
+})();
+</script>
+</body>
+</html>
